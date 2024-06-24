@@ -17,6 +17,10 @@ class MoviesController < ApplicationController
     render({ :template => "movies/show" })
   end
 
+  def new
+    render template: "movies/new"
+  end
+
   def create
     the_movie = Movie.new
     the_movie.title = params.fetch("query_title")
@@ -31,6 +35,11 @@ class MoviesController < ApplicationController
     end
   end
 
+  def edit
+    @the_movie = Movie.where(id: params.fetch(:id))[0]
+    render template: "movies/edit"
+  end
+
   def update
     the_id = params.fetch("id")
     the_movie = Movie.where({ :id => the_id }).first
@@ -41,7 +50,7 @@ class MoviesController < ApplicationController
 
     if the_movie.valid?
       the_movie.save
-      redirect_to("/movies/#{the_movie.id}", { :notice => "Movie updated successfully."} )
+      redirect_to("/movies/#{the_movie.id}", { :notice => "Movie updated successfully." })
     else
       redirect_to("/movies/#{the_movie.id}", { :alert => the_movie.errors.full_messages.to_sentence })
     end
@@ -53,6 +62,6 @@ class MoviesController < ApplicationController
 
     the_movie.destroy
 
-    redirect_to("/movies", { :notice => "Movie deleted successfully."} )
+    redirect_to("/movies", { :notice => "Movie deleted successfully." })
   end
 end
